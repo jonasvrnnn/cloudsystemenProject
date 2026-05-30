@@ -19,6 +19,7 @@ jobs:
           username: jonas
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /root/project
-            git pull
+            cd /home/jonas/cloudsystemenProject
+            git pull origin main
+            cd lab-state-loading-indicator
             docker compose up -d --build
