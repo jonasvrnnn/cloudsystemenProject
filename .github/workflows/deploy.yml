@@ -1,32 +1,16 @@
-name: Deploy
+- name: Deploy to server via SSH
+  uses: appleboy/ssh-action@v1.0.3
+  with:
+    host: ${{ secrets.SERVER_IP }}
+    username: jonas
+    key: ${{ secrets.SSH_PRIVATE_KEY }}
+    port: 2222
+    script: |
+      set -e
 
-on:
-  push:
-    branches:
-      - main
+      cd /home/jonas/cloudsystemenProject
+      git pull origin main
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Deploy to server via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: jonas
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 2222
-          script: |
-            set -e
-
-            cd /home/jonas/cloudsystemenProject
-
-            git pull origin main
-
-            cd lab-state-loading-indicator
-
-            docker compose down || true
-            docker compose up -d --build
+      cd lab-state-loading-indicator
+      docker compose down || true
+      docker compose up -d --build
